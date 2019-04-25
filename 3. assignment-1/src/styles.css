@@ -1,0 +1,12 @@
+/* You can add global styles to this file, and also import other style files */
+.white-text {
+    color: white;
+}
+
+.message {
+    margin: 5px;
+    padding:5px;
+    min-height: 32px;
+    width: 30%;
+    border-radius: 5px;
+}
