@@ -1,0 +1,12 @@
+<div class="col-xs-6">
+  <div class="row">
+    <label>Your name:</label>
+    <input type="text" class="form-control" [(ngModel)]="userName">
+  </div>
+  <div class="row">
+    {{getDisplayText()}}
+  </div>
+  <div class="row">
+    <button class="btn btn-primary" [disabled]="!userName" (click)="onClearUser($event)">Clear user</button>
+  </div>
+</div>
