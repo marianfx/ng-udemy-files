@@ -1,0 +1,15 @@
+<div class="row">
+  <div class="col-xs-2">
+    <button class="btn btn-primary" (click)="onDisplayDetailsToggle()">Display Details</button>
+  </div>
+  <div class="col-xs-3">
+    <p *ngIf="isHiddenTextDisplayed">This paragraph is magic and hidden</p>
+  </div>
+</div>
+<div class="row">
+  <p *ngIf="clicks.length > 0">Click history: </p>
+  <ul>
+    <li *ngFor="let click of clicks; let i = index" [ngStyle]="{'background-color': i >= 4 ? 'blue' : 'white'}"
+      [ngClass]="{'white-color': i>=4}">{{click}}</li>
+  </ul>
+</div>
