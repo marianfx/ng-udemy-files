@@ -35,4 +35,27 @@ export class AppComponent {
       content: blueprintData.blueprintContent
     });
   }
+
+  /**
+   * Used to test-trigger the onChange from the component
+   * Because the Input is changed
+   *
+   * @memberof AppComponent
+   */
+  onChangeFirst() {
+    if (this.serverElements && this.serverElements.length > 0) {
+      this.serverElements[0].name = "Changed!";
+    }
+  }
+
+  /**
+   * Used to test-trigger the onDestroy from the component
+   *
+   * @memberof AppComponent
+   */
+  onDestroyFirst() {
+    if (this.serverElements && this.serverElements.length > 0) {
+      this.serverElements.splice(0, 1);
+    }
+  }
 }
