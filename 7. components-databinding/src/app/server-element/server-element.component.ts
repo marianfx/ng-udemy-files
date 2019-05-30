@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, DoCheck, AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, DoCheck, AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked, OnDestroy, ViewChild, ElementRef, ContentChild } from '@angular/core';
 
 @Component({
   selector: 'app-server-element',
@@ -16,7 +16,11 @@ export class ServerElementComponent implements OnInit, OnChanges, DoCheck, After
   element: { type: string, name: string, content: string};
   @Input() name: string;
 
+  // ViewChild = view from self template
   @ViewChild("headingElement") headingElement: ElementRef;
+
+  // ContentChild = view what has been passed in ng-content
+  @ContentChild("theChildParagraph") theChildParagraph: ElementRef;
 
   constructor() {
     console.log("I'm building myself");
@@ -69,6 +73,7 @@ export class ServerElementComponent implements OnInit, OnChanges, DoCheck, After
   ngAfterViewInit() {
     console.log("The view has finished initializing");
     console.log("Text content after view init: " + this.headingElement.nativeElement.textContent); // has value & access to element
+    console.log("Text child paragraph content after view init: " + this.headingElement.nativeElement.textContent); // has value & access to element
   }
 
   /**
