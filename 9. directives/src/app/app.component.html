@@ -28,7 +28,8 @@
         </div>
       </ul>
       <p appBasicHighlight>I am highlighted paragraph by directive</p>
-      <p appBetterHighlight>I am better highlighted paragraph by directive</p>
+      <p appBetterHighlight [highlightColor]="'red'">I am better highlighted paragraph by directive</p>
+      <!-- <p appBetterHighlight highlightColor="red">I am better highlighted paragraph by directive</p> <- EQUIVALENT, but still property binding (no changes tho)-->
       <ng-template [ngIf]="onlyOdd">
         <p>Only odd</p>
       </ng-template>
