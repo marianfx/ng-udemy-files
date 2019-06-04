@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./edit-server.component.css']
 })
 export class EditServerComponent implements OnInit {
+  allowEdit = true;
   server: {id: number, name: string, status: string};
   serverName = '';
   serverStatus = '';
@@ -18,7 +19,8 @@ export class EditServerComponent implements OnInit {
 
   ngOnInit() {
     this.route.queryParams.subscribe((queryParams) => {
-      console.log(queryParams);
+      let allowEdit = +queryParams['allowEdit'];
+      this.allowEdit = allowEdit === 1;
     });
     this.route.fragment.subscribe((fragment) => {
       console.log(fragment);
