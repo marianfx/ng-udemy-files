@@ -1,10 +1,10 @@
 import { Ingredient } from "../shared/ingredient.model";
-import { Output, EventEmitter } from "@angular/core";
+import { Subject } from "rxjs/Subject";
 
 export class ShoppingListService {
 
   private ingredients: Ingredient[] = [];
-  @Output() ingredientAdded = new EventEmitter<Ingredient[]>();
+  ingredientAdded = new Subject<Ingredient[]>();
 
   getIngredients() {
     return this.ingredients.slice();
@@ -12,13 +12,13 @@ export class ShoppingListService {
 
   addIngredient(ingredient: Ingredient) {
     this.ingredients.push(ingredient);
-    this.ingredientAdded.emit(this.ingredients.slice());
+    this.ingredientAdded.next(this.ingredients.slice());
   }
 
   addIngredients(ingredients: Ingredient[]) {
     // doing a FOR would blow some events (if calling addIngredient)
     // this is the 'spread' operator
     this.ingredients.push(...ingredients);
-    this.ingredientAdded.emit(this.ingredients.slice());
+    this.ingredientAdded.next(this.ingredients.slice());
   }
 }
