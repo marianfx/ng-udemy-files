@@ -60,7 +60,9 @@ const appRoutes: Routes = [
 
 @NgModule({
   imports:  [
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes,
+      // { useHash : true } // this would use #servers instead of routes
+    )
   ],
   exports: [ // send to the caller module the router, to not import it again there
     RouterModule
