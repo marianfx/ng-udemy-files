@@ -13,6 +13,8 @@ export class AppComponent {
     { name: "teacher", description: "Your first teacher?"}];
 
   defaultQuestion = this.questions[0].name;
+  answer: string = "";
+
   @ViewChild("theForm") signupForm: NgForm;
 
   suggestUserName() {
