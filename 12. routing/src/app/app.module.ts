@@ -12,6 +12,7 @@ import { UserComponent } from './users/user/user.component';
 import { EditServerComponent } from './servers/edit-server/edit-server.component';
 import { ServerComponent } from './servers/server/server.component';
 import { ServersService } from './servers/servers.service';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 const appRoutes: Routes = [
   {
@@ -41,6 +42,14 @@ const appRoutes: Routes = [
         component: EditServerComponent
       }
     ]
+  },
+  {
+    path: "not-found",
+    component: PageNotFoundComponent
+  },
+  {
+    path: "**", // must be the last, to catch  the rest
+    redirectTo: "/not-found"
   }
 ];
 
@@ -52,7 +61,8 @@ const appRoutes: Routes = [
     ServersComponent,
     UserComponent,
     EditServerComponent,
-    ServerComponent
+    ServerComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
