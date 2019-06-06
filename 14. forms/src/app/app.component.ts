@@ -11,8 +11,9 @@ export class AppComponent {
   questions: {name: string, description: string}[] = [
     {name: "pet", description: "Your first Pet?"},
     { name: "teacher", description: "Your first teacher?"}];
-
   defaultQuestion = this.questions[0].name;
+
+  genders = ['male', 'female'];
   answer: string = "";
 
   @ViewChild("theForm") signupForm: NgForm;
