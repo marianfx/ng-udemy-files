@@ -2,29 +2,31 @@
   <div class="row">
     <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
       <form [formGroup]="signupForm">
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input
-            type="text"
-            id="username"
-            formControlName="username"
-            class="form-control">
-            <span class="help-block"
-              *ngIf="signupForm.get('username').touched && !signupForm.get('username').valid">
-              Please enter valid username
-            </span>
-        </div>
-        <div class="form-group">
-          <label for="email">email</label>
-          <input
-            type="text"
-            id="email"
-            formControlName="email"
-            class="form-control">
-            <span class="help-block"
-              *ngIf="signupForm.get('email').touched && !signupForm.get('email').valid">
-              Please enter valid email
-            </span>
+        <div formGroupName="userData" class="form-group">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              formControlName="username"
+              class="form-control">
+              <span class="help-block"
+                *ngIf="signupForm.get('userData.username').touched && !signupForm.get('userData.username').valid">
+                Please enter valid username
+              </span>
+          </div>
+          <div class="form-group">
+            <label for="email">email</label>
+            <input
+              type="text"
+              id="email"
+              formControlName="email"
+              class="form-control">
+              <span class="help-block"
+                *ngIf="signupForm.get('userData.email').touched && !signupForm.get('userData.email').valid">
+                Please enter valid email
+              </span>
+          </div>
         </div>
         <div class="radio"
           *ngFor="let gender of genders">
