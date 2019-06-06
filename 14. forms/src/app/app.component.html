@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-      <form (ngSubmit)="onSubmit(theForm)" #theForm="ngForm"> <!-- Makes the form access behind the scenes angular ref -->
+      <form (ngSubmit)="onSubmit()" #theForm="ngForm"> <!-- Makes the form access behind the scenes angular ref -->
         <div id="user-data"
           ngModelGroup="userData"
           #userData="ngModelGroup">
@@ -12,7 +12,8 @@
               name="username"
               required>
           </div>
-          <button class="btn btn-default" type="button">Suggest an Username</button>
+          <button class="btn btn-default" type="button"
+            (click)="suggestUserName()">Suggest an Username</button>
           <div class="form-group">
             <label for="email">Mail</label>
             <input type="email" id="email" class="form-control"
@@ -49,6 +50,17 @@
         <button class="btn btn-primary" type="submit"
           [disabled]="!theForm.valid">Submit</button>
       </form>
+      <hr>
+      <div class="row" *ngIf="isSubmitted">
+        <div class="col-xs-12">
+          <h3>Your data</h3>
+          <p>Username: {{ user.username }}</p>
+          <p>Email: {{ user.email }} </p>
+          <p>Secret question:  Your first {{ user.question }}</p>
+          <p>Answer: {{ user.answer }} </p>
+          <p>Gender: {{ user.gender }} </p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
