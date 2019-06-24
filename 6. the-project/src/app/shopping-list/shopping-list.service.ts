@@ -5,9 +5,19 @@ export class ShoppingListService {
 
   private ingredients: Ingredient[] = [];
   ingredientAdded = new Subject<Ingredient[]>();
+  startedEditing = new Subject<number>();
 
   getIngredients() {
     return this.ingredients.slice();
+  }
+
+  getIngredient(i: number): Ingredient {
+    return this.ingredients[i];
+  }
+
+  updateIngredient(i: number, newData: Ingredient) {
+    this.ingredients[i] = newData;
+    this.ingredientAdded.next(this.ingredients.slice());
   }
 
   addIngredient(ingredient: Ingredient) {
