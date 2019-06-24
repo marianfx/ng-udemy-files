@@ -1,6 +1,7 @@
-import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Ingredient } from '../../shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list.service';
+import { NgForm } from '@angular/forms'
 
 @Component({
   selector: 'app-shopping-edit',
@@ -8,18 +9,14 @@ import { ShoppingListService } from '../shopping-list.service';
   styleUrls: ['./shopping-edit.component.css']
 })
 export class ShoppingEditComponent implements OnInit {
-
-  @ViewChild("nameInput") nameInput: ElementRef;
-  @ViewChild("amountInput") amountInput: ElementRef;
-
   constructor(private slService: ShoppingListService) { }
 
   ngOnInit() {
   }
 
-  onAddItem() {
-    let name = this.nameInput.nativeElement.value;
-    let amount = this.amountInput.nativeElement.value;
+  onAddItem(form: NgForm) {
+    let name = form.value["name"];
+    let amount = form.value["amount"];
     if (!name)
       return alert("Name must have value");
     if (!amount)
