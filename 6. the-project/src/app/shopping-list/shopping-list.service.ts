@@ -20,6 +20,11 @@ export class ShoppingListService {
     this.ingredientAdded.next(this.ingredients.slice());
   }
 
+  deleteIngredient(i: number) {
+    this.ingredients.splice(i, 1);
+    this.ingredientAdded.next(this.ingredients.slice());
+  }
+
   addIngredient(ingredient: Ingredient) {
     this.ingredients.push(ingredient);
     this.ingredientAdded.next(this.ingredients.slice());
