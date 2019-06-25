@@ -1,7 +1,7 @@
-import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams, HttpEventType } from "@angular/common/http";
 import { Post } from "./post.model";
 import { Injectable } from "@angular/core";
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, tap } from 'rxjs/operators';
 import { Observable } from "rxjs/Observable";
 import { Subject } from "rxjs/Subject";
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
@@ -18,7 +18,11 @@ export class PostsService {
     this.http
       .post(
         'https://ng-tutorial-udemy.firebaseio.com//posts.json',
-        data
+        data,
+        {
+          // observe: 'body' // this would only return body of the response
+          observe: 'response' // this would only return body of the response
+        }
       )
       .subscribe(responseData => {
         console.log(responseData);
@@ -56,6 +60,13 @@ export class PostsService {
   }
 
   deleteAllPosts(): Observable<any> {
-    return this.http.delete('https://ng-tutorial-udemy.firebaseio.com//posts.json');
+    return this.http.delete('https://ng-tutorial-udemy.firebaseio.com//posts.json', {
+      observe: 'events',
+      responseType: 'text'
+    }).pipe(tap(event => {
+      console.log(event);
+      if (event.type === HttpEventType.Sent) // this would also return progress info
+        console.log("Request was sent");
+    }));
   }
 }
