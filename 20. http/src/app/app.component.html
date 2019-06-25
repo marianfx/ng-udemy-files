@@ -52,7 +52,12 @@
   <div class="row">
     <div class="col-xs-12 col-md-6 col-md-offset-3">
       <p *ngIf="loadedPosts.length <= 0 && !isFetching">No posts available!</p>
-      <p *ngIf="isFetching">Loading</p>
+      <p *ngIf="isFetching && !error">Loading</p>
+      <div *ngIf="error" class="alert alert-danger">
+        <h1>An error occured</h1>
+        <p>{{error}}</p>
+        <button class="btn btn-danger" (click)="clearError()">OK</button>
+      </div>
       <ul class="list-group" *ngIf="loadedPosts.length >= 1 && !isFetching">
         <li class="list-group-item" *ngFor="let post of loadedPosts">
           <h1>{{post.title}}</h1>

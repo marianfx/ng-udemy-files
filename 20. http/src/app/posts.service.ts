@@ -1,12 +1,15 @@
 import { HttpClient } from "@angular/common/http";
 import { Post } from "./post.model";
 import { Injectable } from "@angular/core";
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 import { Observable } from "rxjs/Observable";
+import { Subject } from "rxjs/Subject";
+import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 
 @Injectable() // needed to be able to inject HttpClient
 export class PostsService {
+  error = new Subject<string>();
 
   constructor(private http: HttpClient) {}
 
@@ -19,10 +22,12 @@ export class PostsService {
       )
       .subscribe(responseData => {
         console.log(responseData);
+      }, error => {
+        this.error.next(error.message);
       });
   }
 
-  getPosts(): Observable<Post[]> {
+  getPosts(): Observable<any> {
     return this.http.get<{ [key: string]: Post}>('https://ng-tutorial-udemy.firebaseio.com//posts.json') // recommended to make data know types
       .pipe(map((data) => {
         // transform object to array
@@ -33,6 +38,12 @@ export class PostsService {
         }
 
         return outArray;
+      }),
+      // catches the error to do stuff here, then it passes it to subscribe
+      catchError(error => {
+        // something, e.g. log
+        console.log(error);
+        return ErrorObservable.create(error);
       }));
   }
 
