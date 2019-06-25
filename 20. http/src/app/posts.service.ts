@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Post } from "./post.model";
 import { Injectable } from "@angular/core";
 import { map, catchError } from 'rxjs/operators';
@@ -28,7 +28,15 @@ export class PostsService {
   }
 
   getPosts(): Observable<any> {
-    return this.http.get<{ [key: string]: Post}>('https://ng-tutorial-udemy.firebaseio.com//posts.json') // recommended to make data know types
+    var searchParams = new HttpParams();
+    searchParams = searchParams.append('print', 'pretty');
+    searchParams = searchParams.append('guild', '222');
+
+    return this.http.get<{ [key: string]: Post}>('https://ng-tutorial-udemy.firebaseio.com//posts.json',
+      {
+        headers: new HttpHeaders({"Custom-header": 'Hello'}),
+        params: new HttpParams().set('print', 'pretty')
+      }) // recommended to make data know types
       .pipe(map((data) => {
         // transform object to array
         const outArray: Post[] = [];
