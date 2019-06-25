@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { Post } from './post.model';
 
 @Component({
   selector: 'app-root',
@@ -8,16 +10,19 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AppComponent implements OnInit {
   loadedPosts = [];
+  isFetching: boolean = false;
 
   constructor(private http: HttpClient) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.fetchPosts();
+  }
 
-  onCreatePost(postData: { title: string; content: string }) {
+  onCreatePost(postData: Post) {
     // Send Http request
     this.http
       .post(
-        'https://ng-complete-guide-c56d3.firebaseio.com/posts.json',
+        'https://ng-tutorial-udemy.firebaseio.com//posts.json',
         postData
       )
       .subscribe(responseData => {
@@ -26,10 +31,30 @@ export class AppComponent implements OnInit {
   }
 
   onFetchPosts() {
-    // Send Http request
+    this.fetchPosts();
   }
 
   onClearPosts() {
     // Send Http request
+  }
+
+  fetchPosts() {
+    this.isFetching = true;
+    this.http.get<{ [key: string]: Post}>('https://ng-tutorial-udemy.firebaseio.com//posts.json') // recommended to make data know types
+      .pipe(map((data) => {
+        // transform object to array
+        const outArray: Post[] = [];
+        for(let key in data) {
+          if (data.hasOwnProperty(key))
+            outArray.push({ ...data[key], id: key }); // new object with added property 'id'
+        }
+
+        return outArray;
+      }))
+      .subscribe(x => {
+        // console.log(x);
+        this.isFetching = false;
+        this.loadedPosts = x;
+      });
   }
 }
