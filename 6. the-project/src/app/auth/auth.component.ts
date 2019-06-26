@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { AuthService, AuthResponseData } from "./auth.service";
+import { Observable } from "rxjs/Observable";
 
 // https://firebase.google.com/docs/reference/rest/auth
 @Component({
@@ -20,17 +21,20 @@ export class AuthComponent {
 
   onSubmit(f: NgForm) {
     let payload = f.value; // has already correctly named fields {email, pass}
-    if (!this.isLoginMode) {
-      this.isLoading = true;
-      this.auth.signup(payload['email'], payload['password'])
-        .subscribe((response: AuthResponseData) => {
-          this.isLoading = false;
-        }, (error: Error) => {
-          console.log("Error happened: " + error.message);
-          this.error = error.message;
-          this.isLoading = false;
-        });
-    }
+    let authObservable: Observable<AuthResponseData>;
+    authObservable = this.isLoginMode
+      ? this.auth.login(payload['email'], payload['password'])
+      : this.auth.signup(payload['email'], payload['password']);
+
+    this.isLoading = true;
+    authObservable.subscribe((response: AuthResponseData) => {
+        this.isLoading = false;
+        console.log(response);
+      }, (error: Error) => {
+        console.log("Error happened: " + error.message);
+        this.error = error.message;
+        this.isLoading = false;
+      });
 
     f.reset();
   }
