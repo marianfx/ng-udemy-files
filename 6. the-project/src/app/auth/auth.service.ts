@@ -23,6 +23,7 @@ export interface AuthLoginResponseData extends AuthResponseData {
 @Injectable()
 export class AuthService {
   userSubject = new BehaviorSubject<User>(null); // behavioral subject also stores previous value
+  toeTimer: any;
 
 
   constructor(private http: HttpClient, private router: Router) {
@@ -49,15 +50,45 @@ export class AuthService {
       tap(this.handleAuth.bind(this)));
   }
 
+  autoLogin() {
+    const userData = localStorage.getItem('userData');
+    if (!userData)
+      return;
+
+    let udataJson = JSON.parse(userData) as {
+      email: string,
+      id: string,
+      _token: string,
+      _tokenExpirationDate: string
+    };
+    let user = new User(udataJson.email, udataJson.id, udataJson._token, new Date(udataJson._tokenExpirationDate));
+
+    console.log(user);
+    if (user.token) {
+      const durationExpire = new Date(udataJson._tokenExpirationDate).getTime() - new Date().getTime();
+      this.userSubject.next(user);
+      this.autoLogout(durationExpire * 1000);
+    }
+  }
+
   logout() {
     this.userSubject.next(null);
+    localStorage.removeItem('userData');
+    if (this.toeTimer)
+      clearTimeout(this.toeTimer);
     this.router.navigate(['/auth']);
+  }
+
+  autoLogout(expirationDuration: number) {
+    this.toeTimer = setTimeout(this.logout.bind(this), expirationDuration);
   }
 
   private handleAuth(data: AuthLoginResponseData) {
     const expDate = new Date(new Date().getTime() + +data.expiresIn * 1000);
     const user = new User(data.email, data.localId, data.idToken, expDate);
     console.log(user);
+    localStorage.setItem('userData', JSON.stringify(user));
+    this.autoLogout(+data.expiresIn * 1000);
     this.userSubject.next(user);
   }
 
