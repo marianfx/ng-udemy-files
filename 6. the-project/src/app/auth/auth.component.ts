@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { AuthService, AuthResponseData } from "./auth.service";
 import { Observable } from "rxjs/Observable";
+import { Router } from "@angular/router";
 
 // https://firebase.google.com/docs/reference/rest/auth
 @Component({
@@ -13,7 +14,7 @@ export class AuthComponent {
   isLoading = false;
   error = '';
 
-  constructor(private auth: AuthService) {}
+  constructor(private auth: AuthService, private router: Router) {}
 
   onSwitchMode() {
     this.isLoginMode = !this.isLoginMode;
@@ -30,6 +31,7 @@ export class AuthComponent {
     authObservable.subscribe((response: AuthResponseData) => {
         this.isLoading = false;
         console.log(response);
+        this.router.navigate(['/recipes']);
       }, (error: Error) => {
         console.log("Error happened: " + error.message);
         this.error = error.message;

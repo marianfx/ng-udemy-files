@@ -1,8 +1,10 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
-import { catchError } from "rxjs/operators";
+import { catchError, tap } from "rxjs/operators";
 import { ErrorObservable } from "rxjs/observable/ErrorObservable";
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { User } from "./user.model";
 
 export interface AuthResponseData {
   kind: string;
@@ -19,6 +21,8 @@ export interface AuthLoginResponseData extends AuthResponseData {
 
 @Injectable()
 export class AuthService {
+  userSubject = new BehaviorSubject<User>(null); // behavioral subject also stores previous value
+
 
   constructor(private http: HttpClient) {
 
@@ -39,7 +43,16 @@ export class AuthService {
       email: email,
       password: pass,
       returnSecureToken: true
-    }).pipe(catchError(this.handleError));
+    }).pipe(
+      catchError(this.handleError),
+      tap(this.handleAuth.bind(this)));
+  }
+
+  private handleAuth(data: AuthLoginResponseData) {
+    const expDate = new Date(new Date().getTime() + +data.expiresIn * 1000);
+    const user = new User(data.email, data.localId, data.idToken, expDate);
+    console.log(user);
+    this.userSubject.next(user);
   }
 
   private handleError(error: HttpErrorResponse): ErrorObservable {
