@@ -10,7 +10,7 @@
         <li *ngIf="isLoggedIn" routerLinkActive="active"><a routerLink="/shopping-list">Shopping List</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li *ngIf="!isLoggedIn">
+        <li *ngIf="isLoggedIn">
           <a class="pointerr" (click)="onLogOut()">Log Out</a>
         </li>
         <li *ngIf="isLoggedIn" class="dropdown" appDropdown>

@@ -17,13 +17,8 @@ export class DataStorageService {
   }
 
   fetchData() {
-    return this.auth.userSubject.pipe(
-      take(1),
-      exhaustMap(user => { // waits for first observable, then calls the next one and returns the result
-        return this.http.get <Recipe[]>('https://ng-udemy-project-e6d33.firebaseio.com/recipes.json', {
-          params: new HttpParams().set('auth', user.token)
-        });
-      }),
+    return this.http.get < Recipe[] > ('https://ng-udemy-project-e6d33.firebaseio.com/recipes.json')
+    .pipe(
       map(data => {
         return data.map(recipe => {
           return {
