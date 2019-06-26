@@ -5,6 +5,7 @@ import { catchError, tap } from "rxjs/operators";
 import { ErrorObservable } from "rxjs/observable/ErrorObservable";
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { User } from "./user.model";
+import { Router } from "@angular/router";
 
 export interface AuthResponseData {
   kind: string;
@@ -24,7 +25,7 @@ export class AuthService {
   userSubject = new BehaviorSubject<User>(null); // behavioral subject also stores previous value
 
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
 
   }
 
@@ -46,6 +47,11 @@ export class AuthService {
     }).pipe(
       catchError(this.handleError),
       tap(this.handleAuth.bind(this)));
+  }
+
+  logout() {
+    this.userSubject.next(null);
+    this.router.navigate(['/auth']);
   }
 
   private handleAuth(data: AuthLoginResponseData) {
