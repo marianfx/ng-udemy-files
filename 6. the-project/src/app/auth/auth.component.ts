@@ -40,4 +40,8 @@ export class AuthComponent {
 
     f.reset();
   }
+
+  onErrorHandled() {
+    this.error = '';
+  }
 }
