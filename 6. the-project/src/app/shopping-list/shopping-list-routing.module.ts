@@ -4,7 +4,7 @@ import { NgModule } from "@angular/core";
 
 const appRoutes: Routes = [
   {
-    path: 'shopping-list',
+    path: '',
     component: ShoppingListComponent
   }
 ];

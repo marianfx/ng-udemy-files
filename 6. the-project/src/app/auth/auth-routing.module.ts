@@ -4,7 +4,7 @@ import { AuthComponent } from "./auth.component";
 
 const appRoutes: Routes = [
   {
-    path: 'auth',
+    path: '',
     component: AuthComponent
   },
 ];
