@@ -1,7 +1,5 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from '@angular/router';
-import { ShoppingListComponent } from "./shopping-list/shopping-list.component";
-import { AuthComponent } from "./auth/auth.component";
 
 const appRoutes: Routes = [
   {
@@ -10,13 +8,9 @@ const appRoutes: Routes = [
     pathMatch: "full" // '' is part of all paths; this makes it redirect only when on home
   },
   {
-    path: 'shopping-list',
-    component: ShoppingListComponent
-  },
-  {
-    path: 'auth',
-    component: AuthComponent
-  },
+    path: 'recipes',
+    loadChildren: './recipes/recipes.module#RecipesModule'
+  }
 ];
 
 @NgModule({

@@ -6,12 +6,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { AppRoutingModule } from './app-routing.module';
-import { RecipesModule } from './recipes/recipes.module';
 import { ShoppingListModule } from './shopping-list/shopping-list.module';
 import { SharedThingsModule } from './shared/shared-things.module';
 import { CoreModule } from './core.module';
 import { AuthModule } from './auth/auth.module';
 
+// remove stuff from 'imports', but also remove import at the top because otherwise it does not reduce code size
 
 @NgModule({
   declarations: [
@@ -23,7 +23,6 @@ import { AuthModule } from './auth/auth.module';
     AppRoutingModule,
     HttpClientModule,
     AuthModule,
-    RecipesModule,
     ShoppingListModule,
     SharedThingsModule,
     CoreModule

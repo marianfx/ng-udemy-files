@@ -9,7 +9,7 @@ import { NgModule } from "@angular/core";
 
 const appRoutes: Routes = [
   {
-    path: 'recipes',
+    path: '',
     component: RecipesComponent,
     canActivate: [AuthGuard],
     children: [
