@@ -1,7 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, async } from '@angular/core/testing';
 
 import { UserComponent } from './user.component';
 import { UserService } from './user.service';
+import { DataService } from '../shared/data.service';
 
 describe('UserComponent', () => {
   beforeEach(() => {
@@ -37,8 +38,33 @@ describe('UserComponent', () => {
     let fixture = TestBed.createComponent(UserComponent);
     let userComp = fixture.debugElement.componentInstance as UserComponent;
     userComp.isLoggedIn = false;
-    fixture.detectChanges();// detect how page is now after render
+    fixture.detectChanges(); // detect how page is now after render
     let compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('p').textContent).not.toContain(userComp.user.name);
   });
+
+  it('should not fetch data successfully if not called async', () => {
+    let fixture = TestBed.createComponent(UserComponent);
+    let userComp = fixture.debugElement.componentInstance as UserComponent;
+    let dataService = fixture.debugElement.injector.get(DataService);
+    fixture.detectChanges();
+    let spy = spyOn(dataService, 'getDetails')
+      .and.returnValue(Promise.resolve('Data')); // this checks when this executes, and returns the dummy data I return here
+    expect(userComp.data).toBe(undefined); // success when not running async
+
+  });
+
+  it('should fetch data successfully if called async', async(() => {
+    let fixture = TestBed.createComponent(UserComponent);
+    let userComp = fixture.debugElement.componentInstance as UserComponent;
+    let dataService = fixture.debugElement.injector.get(DataService);
+    let spy = spyOn(dataService, 'getDetails')
+      .and.returnValue(Promise.resolve('Data')); // this checks when this executes, and returns the dummy data I return here
+    fixture.detectChanges();
+    fixture.whenStable() // after asyncs finished
+      .then(() => {
+        expect(userComp.data).toBe('Data'); // success when running async
+      });
+
+  }));
 });
