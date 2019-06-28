@@ -128,4 +128,12 @@ export class AppComponent {
     console.log(indexOf);
     this.list.splice(indexOf, 1);
   }
+
+  onAnimationStarted(event) {
+
+  }
+
+  onAnimationEnded(event) {
+
+  }
 }
