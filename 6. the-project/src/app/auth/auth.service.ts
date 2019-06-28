@@ -6,6 +6,7 @@ import { ErrorObservable } from "rxjs/observable/ErrorObservable";
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { User } from "./user.model";
 import { Router } from "@angular/router";
+import { environment } from "../../environments/environment";
 
 export interface AuthResponseData {
   kind: string;
@@ -31,7 +32,7 @@ export class AuthService {
   }
 
   signup(email: string, pass: string): Observable<AuthResponseData> {
-    let url = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyCTDY2hbATWPxVTuYbzStsv5tKsvHLc4bA';
+    let url = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=' + environment.firebaseAPIKey;
     return this.http.post<AuthResponseData>(url, {
       email: email,
       password: pass,
@@ -40,7 +41,7 @@ export class AuthService {
   }
 
   login(email: string, pass: string): Observable<AuthLoginResponseData> {
-    let url = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyCTDY2hbATWPxVTuYbzStsv5tKsvHLc4bA';
+    let url = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=' + environment.firebaseAPIKey;
     return this.http.post<AuthLoginResponseData>(url, {
       email: email,
       password: pass,
