@@ -40,6 +40,28 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
         })),
         animate(500) // this is transition to the end state
       ])
+    ]),
+    // in = element added to the DOM
+    // void = special state when element does not exist
+    trigger('list1', [
+      state('in', style({
+        'opacity': 1,
+        transform: 'translateX(0)'
+      })),
+      transition('void => *', [
+        style({
+          'opacity': 0,
+          transform: 'translate(-100px)'
+        }),
+        animate(300)
+      ]),
+      transition('* => void', [
+        animate(300),
+        style({
+          transform: 'translateX(100px)',
+          opacity: 0
+        })
+      ]),
     ])
   ]
 })
@@ -59,5 +81,11 @@ export class AppComponent {
 
   onShrink() {
     this.wildState = this.wildState === 'shrunken' ? 'normal' : 'shrunken';
+  }
+
+  onDelete(item) {
+    const indexOf = this.list.indexOf(item);
+    console.log(indexOf);
+    this.list.splice(indexOf, 1);
   }
 }
