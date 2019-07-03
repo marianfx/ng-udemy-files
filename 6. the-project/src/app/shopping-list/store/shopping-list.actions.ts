@@ -5,6 +5,8 @@ export const ADD_INGREDIENT = 'ADD_INGREDIENT';
 export const ADD_INGREDIENTS = 'ADD_INGREDIENTS';
 export const UPDATE_INGREDIENT = 'UPDATE_INGREDIENT';
 export const DELETE_INGREDIENT = 'DELETE_INGREDIENT';
+export const START_EDIT = 'START_EDIT';
+export const STOP_EDIT = 'STOP_EDIT';
 
 export class AddIngredientAction implements Action {
   readonly type: string = ADD_INGREDIENT; // this is identified in the reducer
@@ -23,16 +25,34 @@ export class AddIngredientsAction implements Action {
 export class UpdateIngredientAction implements Action {
   readonly type: string = UPDATE_INGREDIENT; // this is identified in the reducer
 
-  constructor(public data: { index: number, ingredient: Ingredient }) { }
+  constructor(public data: { ingredient: Ingredient }) { }
 }
 
 
 export class DeleteIngredientAction implements Action {
   readonly type: string = DELETE_INGREDIENT; // this is identified in the reducer
 
-  constructor(public data: { index: number }) { }
+  constructor(public data: void) { }
 }
 
 
+export class StartEditAction implements Action {
+  readonly type: string = START_EDIT; // this is identified in the reducer
+
+  constructor(public data: number) { }
+}
+
+
+export class StopEditAction implements Action {
+  readonly type: string = STOP_EDIT; // this is identified in the reducer
+
+  constructor(public data: void) { }
+}
+
 // export all types
-export type ShoppingListActions = AddIngredientAction | AddIngredientsAction | UpdateIngredientAction | DeleteIngredientAction;
+export type ShoppingListActions = AddIngredientAction
+| AddIngredientsAction
+| UpdateIngredientAction
+| DeleteIngredientAction
+| StopEditAction
+| StartEditAction;

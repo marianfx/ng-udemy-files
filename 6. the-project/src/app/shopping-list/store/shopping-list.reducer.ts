@@ -1,5 +1,5 @@
 import { Ingredient } from "../../shared/ingredient.model";
-import { ADD_INGREDIENT, ADD_INGREDIENTS, ShoppingListActions, UPDATE_INGREDIENT, DELETE_INGREDIENT } from "./shopping-list.actions";
+import { ADD_INGREDIENT, ADD_INGREDIENTS, ShoppingListActions, UPDATE_INGREDIENT, DELETE_INGREDIENT, START_EDIT, STOP_EDIT } from "./shopping-list.actions";
 
 export interface AppStateModel {
   shoppingList: ShoppingListStateModel;
@@ -42,31 +42,45 @@ export function shoppingListReducer(state = initialState, action: ShoppingListAc
         return newState2;
 
       case UPDATE_INGREDIENT:
-          const updateData = action.data as { index: number, ingredient: Ingredient};
-          const ingredient = state.ingredients[updateData.index];
+          const updateData = action.data as { ingredient: Ingredient};
+          const ingredient = state.ingredients[state.editedIngredientIndex];
           const updatedIngredient = {
             ...ingredient,
             ...updateData.ingredient
           };
           const updatedIngredients = [...state.ingredients];
-          updatedIngredients[updateData.index] = updatedIngredient;
+          updatedIngredients[state.editedIngredientIndex] = updatedIngredient;
 
           const newState3 = {
             ...state, // copies object props
-            ingredients: updatedIngredients
+            ingredients: updatedIngredients,
+            editedIngredientIndex: -1
           };
           return newState3;
 
         case DELETE_INGREDIENT:
-            const deleteData = action.data as { index: number };
-            const newIngredients = state.ingredients.filter((ig, index) => index !== deleteData.index);
+            const newIngredients = state.ingredients.filter((ig, index) => index !== state.editedIngredientIndex);
             const newState4 = {
               ...state, // copies object props
-              ingredients: newIngredients
+              ingredients: newIngredients,
+              editedIngredientIndex: -1
             };
             return newState4;
 
+        case START_EDIT:
+          const startEditData = action.data as number;
+          return {
+            ...state,
+            editedIngredientIndex: startEditData,
+            editedIngredient: {...state.ingredients[startEditData]}
+          };
 
+        case STOP_EDIT:
+          return {
+            ...state,
+            editedIngredientIndex: -1,
+            editedIngredient: null
+          };
     default:
       return initialState;
   }
