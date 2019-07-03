@@ -7,6 +7,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { User } from "./user.model";
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
+import { Store } from "@ngrx/store";
+import * as fromApp from "../store/app.reducer";
+import * as authActions from "./store/auth.actions";
 
 export interface AuthResponseData {
   kind: string;
@@ -23,11 +26,12 @@ export interface AuthLoginResponseData extends AuthResponseData {
 
 @Injectable()
 export class AuthService {
-  userSubject = new BehaviorSubject<User>(null); // behavioral subject also stores previous value
+  // userSubject = new BehaviorSubject<User>(null); // behavioral subject also stores previous value
   toeTimer: any;
 
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, private router: Router,
+    private store: Store<fromApp.AppStateModel>) {
 
   }
 
@@ -67,16 +71,17 @@ export class AuthService {
     console.log(user);
     if (user.token) {
       const durationExpire = new Date(udataJson._tokenExpirationDate).getTime() - new Date().getTime();
-      this.userSubject.next(user);
+      this.store.dispatch(new authActions.LoginAction(user));
       this.autoLogout(durationExpire * 1000);
     }
   }
 
   logout() {
-    this.userSubject.next(null);
+    this.store.dispatch(new authActions.LogoutAction(null));
     localStorage.removeItem('userData');
-    if (this.toeTimer)
+    if (this.toeTimer) {
       clearTimeout(this.toeTimer);
+    }
     this.router.navigate(['/auth']);
   }
 
@@ -87,10 +92,10 @@ export class AuthService {
   private handleAuth(data: AuthLoginResponseData) {
     const expDate = new Date(new Date().getTime() + +data.expiresIn * 1000);
     const user = new User(data.email, data.localId, data.idToken, expDate);
-    console.log(user);
+    // console.log(user);
     localStorage.setItem('userData', JSON.stringify(user));
     this.autoLogout(+data.expiresIn * 1000);
-    this.userSubject.next(user);
+    this.store.dispatch(new authActions.LoginAction(user));
   }
 
   private handleError(error: HttpErrorResponse): ErrorObservable {
