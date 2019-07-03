@@ -78,6 +78,6 @@ export function shoppingListReducer(state = initialState, action: ShoppingListAc
             editedIngredient: null
           };
     default:
-      return initialState;
+      return state;
   }
 }
