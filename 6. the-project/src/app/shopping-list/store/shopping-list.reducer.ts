@@ -1,5 +1,5 @@
 import { Ingredient } from "../../shared/ingredient.model";
-import { ADD_INGREDIENT, AddIngredientAction } from "./shopping-list.actions";
+import { ADD_INGREDIENT, AddIngredientAction, ADD_INGREDIENTS, ShoppingListActions } from "./shopping-list.actions";
 
 export class AppStateModel {
   shoppingList: ShoppingListStateModel;
@@ -16,18 +16,23 @@ const initialState: ShoppingListStateModel = {
     ]
 };
 
-export function shoppingListReducer(state = initialState, action: AddIngredientAction) {
+export function shoppingListReducer(state = initialState, action: ShoppingListActions) {
+  // must NOT edit the existing state, return a new one
   switch (action.type) {
     case ADD_INGREDIENT:
-      // must NOT edit the existing state, return a new one
-      let newState = {
+      const newState = {
         ...state, // copies object props
         ingredients: [...state.ingredients, // copies existing elements
           action.data
         ]
       };
       return newState;
-
+    case ADD_INGREDIENTS:
+        const newState2 = {
+          ...state, // copies object props
+          ingredients: [...state.ingredients, ...(action.data as Ingredient[])]
+        };
+        return newState2;
     default:
       return initialState;
   }
