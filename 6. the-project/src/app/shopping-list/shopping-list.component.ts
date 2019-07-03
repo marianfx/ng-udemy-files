@@ -3,8 +3,8 @@ import { Ingredient } from '../shared/ingredient.model';
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import * as fromShoppingList from './store/shopping-list.reducer';
 import * as shoppingListActions from './store/shopping-list.actions';
+import * as fromApp from '../store/app.reducer';
 
 @Component({
   selector: 'app-shopping-list',
@@ -13,10 +13,9 @@ import * as shoppingListActions from './store/shopping-list.actions';
 })
 export class ShoppingListComponent implements OnInit, OnDestroy {
 
-  igChangedSubscription: Subscription;
   ingredients: Observable<{ ingredients: Ingredient[] }>;
 
-  constructor(private store: Store<fromShoppingList.AppStateModel>) { }
+  constructor(private store: Store<fromApp.AppStateModel>) { }
 
   ngOnInit() {
     this.ingredients = this.store.select('shoppingList'); // returns observable with the 'shoppingList' object from state
@@ -30,6 +29,5 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.igChangedSubscription.unsubscribe();
   }
 }
