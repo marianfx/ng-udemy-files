@@ -10,8 +10,15 @@ import { ShoppingListModule } from './shopping-list/shopping-list.module';
 import { SharedThingsModule } from './shared/shared-things.module';
 import { CoreModule } from './core.module';
 import { AuthModule } from './auth/auth.module';
+import { StoreModule } from '@ngrx/store';
+import { shoppingListReducer } from './shopping-list/store/shopping-list.reducer';
 
 // remove stuff from 'imports', but also remove import at the top because otherwise it does not reduce code size
+
+// reducer object
+const appReducer = {
+  shoppingList: shoppingListReducer
+};
 
 @NgModule({
   declarations: [
@@ -22,6 +29,7 @@ import { AuthModule } from './auth/auth.module';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    StoreModule.forRoot(appReducer),
     AuthModule,
     ShoppingListModule,
     SharedThingsModule,
