@@ -1,28 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
-import { RecipeService } from '../recipe.service';
 import { Recipe } from '../recipe.model';
 import * as fromApp from "../../store/app.reducer";
+import * as recipeActions from "../store/recipe.actions";
 import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-recipe-edit',
   templateUrl: './recipe-edit.component.html',
   styleUrls: ['./recipe-edit.component.css']
 })
-export class RecipeEditComponent implements OnInit {
+export class RecipeEditComponent implements OnInit, OnDestroy {
 
   id: number;
   editMode: boolean = false;
   recipeForm: FormGroup;
+  storeSub: Subscription;
 
   get ingredientControls() {
     return (this.recipeForm.get('ingredients') as FormArray).controls;
   }
 
   constructor(private route: ActivatedRoute,
-    private recipeService: RecipeService,
     private router: Router,
     private store: Store<fromApp.AppStateModel>) { }
 
@@ -41,7 +42,7 @@ export class RecipeEditComponent implements OnInit {
     let ingredients = new FormArray([]);
     if (this.editMode) {
 
-      this.store.select("recipe").subscribe(state => {
+      this.storeSub = this.store.select("recipe").subscribe(state => {
         let recipe = state.recipes.find((rr, index) => {
           return index === this.id;
         });
@@ -87,10 +88,14 @@ export class RecipeEditComponent implements OnInit {
     this.recipeForm.value["imagePath"],
     this.recipeForm.value["ingredients"]);
 
-    if (this.editMode)
-      this.recipeService.updateRecipe(this.id, theRecipe);
-    else
-      this.recipeService.addRecipe(theRecipe);
+    if (this.editMode) {
+      this.store.dispatch(new recipeActions.UpdateRecipeAction({
+        index: this.id,
+        recipe: theRecipe
+      }));
+    } else {
+      this.store.dispatch(new recipeActions.AddRecipeAction(theRecipe));
+    }
 
     // also navigate away
     this.onCancel();
@@ -98,5 +103,11 @@ export class RecipeEditComponent implements OnInit {
 
   onCancel() {
     this.router.navigate(["../"], { relativeTo: this.route });
+  }
+
+  ngOnDestroy() {
+    if (this.storeSub) {
+      this.storeSub.unsubscribe();
+    }
   }
 }
