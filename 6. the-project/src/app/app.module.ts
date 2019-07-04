@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
+import { StoreRouterConnectingModule } from "@ngrx/router-store";
 
 
 import { AppComponent } from './app.component';
@@ -30,7 +31,8 @@ import { environment } from '../environments/environment.prod';
     HttpClientModule,
     StoreModule.forRoot(fromApp.appReducer),
     EffectsModule.forRoot([AuthEffects]),
-    StoreDevtoolsModule.instrument({ logOnly: environment.production }),
+    StoreDevtoolsModule.instrument({ logOnly: environment.production }), // allows debugging of redux in Chrome
+    StoreRouterConnectingModule.forRoot(), // allows routing to be intercepted by reducers (and to be seen in store-dev-tools)
     AuthModule,
     ShoppingListModule,
     SharedThingsModule,
