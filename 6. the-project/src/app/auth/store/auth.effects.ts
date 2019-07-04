@@ -5,7 +5,7 @@ import { HttpClient } from "@angular/common/http";
 import { AuthLoginResponseData, AuthResponseData, AuthService } from "../auth.service";
 import { environment } from "../../../environments/environment";
 import { of } from "rxjs/observable/of";
-import { User } from "../user.model";
+import { User, UserExtra } from "../user.model";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 
@@ -14,7 +14,7 @@ const handleAuthentication = (data) => {
   const expDate = new Date(new Date().getTime() + +data.expiresIn * 1000);
   const user = new User(data.email, data.localId, data.idToken, expDate);
   localStorage.setItem("userData", JSON.stringify(user));
-  return new authActions.LoginAction(user);
+  return new authActions.LoginAction(new UserExtra(user, true));
 };
 
 const handleError = (error) => {
@@ -71,8 +71,10 @@ export class AuthEffects {
   @Effect({ dispatch: false })
   authRedirect = this.actions$.pipe(
     ofType(authActions.LOGIN),
-    tap(() => {
-      this.router.navigate(["/"]);
+    tap((authSuccessAction: authActions.LoginAction) => {
+      if (authSuccessAction.data.redirect) {
+        this.router.navigate(["/"]);
+      }
     })
   );
 
@@ -113,8 +115,8 @@ export class AuthEffects {
       let user = new User(udataJson.email, udataJson.id, udataJson._token, new Date(udataJson._tokenExpirationDate));
       if (user.token) {
         const expDuration = new Date(udataJson._tokenExpirationDate).getTime() - new Date().getTime();
-        setAutoLogout(this.authService, { expiresIn: expDuration });
-        return new authActions.LoginAction(user);
+        setAutoLogout(this.authService, { expiresIn: expDuration * 1000 });
+        return new authActions.LoginAction(new UserExtra(user, false));
       }
       // return an empty action
       return { type: "dummy" };
@@ -125,9 +127,9 @@ export class AuthEffects {
   authLogout = this.actions$.pipe(
     ofType(authActions.LOGOUT),
     tap(() => {
-      this.router.navigate(["/"]);
       this.authService.clearLogoutTimer();
       localStorage.removeItem("userData");
+      this.router.navigate(["/"]);
     })
   );
 

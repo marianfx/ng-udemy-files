@@ -1,5 +1,5 @@
 import { Action } from "@ngrx/store";
-import { User } from "../user.model";
+import { User, UserExtra } from "../user.model";
 
 export const LOGIN_START = "[AUTH]LOGIN_START";
 export const LOGIN_FAIL = "[AUTH]LOGIN_FAIL";
@@ -13,11 +13,11 @@ export const CLEAR_ERROR = "[AUTH]CLEAR_ERROR";
 export class LoginAction implements Action {
   readonly type: string = LOGIN; // this is identified in the reducer
 
-  constructor(public data: User) { }
+  constructor(public data: UserExtra) { }
 }
 
 export class LogoutAction implements Action {
-  readonly type: string = LOGIN; // this is identified in the reducer
+  readonly type: string = LOGOUT; // this is identified in the reducer
 
   constructor(public data: void) { }
 }

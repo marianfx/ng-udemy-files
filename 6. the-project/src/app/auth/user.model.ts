@@ -11,4 +11,17 @@ export class User {
 
     return this._token;
   }
+
+  get expirationDate() {
+    return this._tokenExpirationDate;
+  }
+}
+
+export class UserExtra extends User {
+  redirect: boolean;
+
+  constructor(user: User, redirect: boolean) {
+    super(user.email, user.id, user.token, user.expirationDate);
+    this.redirect = redirect;
+  }
 }
