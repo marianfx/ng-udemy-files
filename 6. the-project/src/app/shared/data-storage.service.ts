@@ -22,19 +22,6 @@ export class DataStorageService {
   }
 
   fetchData() {
-    return this.http.get < Recipe[] > ('https://ng-udemy-project-e6d33.firebaseio.com/recipes.json')
-    .pipe(
-      map(data => {
-        return data.map(recipe => {
-          return {
-            ...recipe,
-            ingredients: recipe.ingredients ? recipe.ingredients : []
-          }
-        });
-      }),
-      tap(x => {
-        this.store.dispatch(new recipeActions.SetRecipesAction(x));
-      })
-    );
+
   }
 }

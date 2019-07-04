@@ -17,6 +17,7 @@ import * as fromApp from './store/app.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './auth/store/auth.effects';
 import { environment } from '../environments/environment.prod';
+import { RecipeEffects } from './recipes/store/recipe.effects';
 
 // remove stuff from 'imports', but also remove import at the top because otherwise it does not reduce code size
 
@@ -30,7 +31,7 @@ import { environment } from '../environments/environment.prod';
     AppRoutingModule,
     HttpClientModule,
     StoreModule.forRoot(fromApp.appReducer),
-    EffectsModule.forRoot([AuthEffects]),
+    EffectsModule.forRoot([AuthEffects, RecipeEffects]),
     StoreDevtoolsModule.instrument({ logOnly: environment.production }), // allows debugging of redux in Chrome
     StoreRouterConnectingModule.forRoot(), // allows routing to be intercepted by reducers (and to be seen in store-dev-tools)
     AuthModule,
