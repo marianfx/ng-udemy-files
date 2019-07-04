@@ -6,7 +6,8 @@ import * as fromApp from "../store/app.reducer";
 import * as recipeActions from "../recipes/store/recipe.actions";
 import { Store } from "@ngrx/store";
 import { Actions, ofType } from "@ngrx/effects";
-import { take } from "rxjs/operators";
+import { take, map, switchMap } from "rxjs/operators";
+import { of } from "rxjs/observable/of";
 
 @Injectable()
 export class RecipesResolverService implements Resolve<Recipe[]> {
@@ -14,10 +15,21 @@ export class RecipesResolverService implements Resolve<Recipe[]> {
     private actions$: Actions) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Recipe[] | Observable<Recipe[]> | Promise<Recipe[]> {
-    this.store.dispatch(new recipeActions.FetchRecipesAction(null));
 
-    // little trick: inject the actions in here (no effects) and wait until it triggers an action
-    return (this.actions$.pipe(ofType(recipeActions.SET_RECIPES), take(1)) as Observable<Recipe[]>);
+    return this.store.select("recipe").pipe(
+      take(1),
+      map((recipesState) => {
+        return recipesState.recipes;
+      }),
+      switchMap((recipes) => {
+        if (recipes.length === 0 ) {
+          // little trick: inject the actions in here (no effects) and wait until it triggers an action
+          return (this.actions$.pipe(ofType(recipeActions.SET_RECIPES), take(1)) as Observable<Recipe[]>);
+        }
+
+        // keep existing
+        return of(recipes);
+      })
+    );
   }
-
 }
