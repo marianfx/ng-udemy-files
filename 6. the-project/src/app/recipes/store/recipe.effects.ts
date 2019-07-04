@@ -22,7 +22,7 @@ export class RecipeEffects {
         return {
           ...recipe,
           ingredients: recipe.ingredients ? recipe.ingredients : []
-        }
+        };
       });
     }),
     map((recipes) => { // finally map to action-observable
