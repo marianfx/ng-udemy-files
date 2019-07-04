@@ -1,6 +1,8 @@
 import { Action } from "@ngrx/store";
 import { User } from "../user.model";
 
+export const LOGIN_START = "[AUTH]LOGIN_START";
+export const LOGIN_FAIL = "[AUTH]LOGIN_FAIL";
 export const LOGIN = "[AUTH]LOGIN";
 export const LOGOUT = "[AUTH]LOGOUT";
 
@@ -17,6 +19,18 @@ export class LogoutAction implements Action {
   constructor(public data: void) { }
 }
 
+export class LoginStartAction implements Action {
+  readonly type: string = LOGIN_START; // this is identified in the reducer
+
+  constructor(public data: { email: string, password: string }) { }
+}
+
+export class LoginFailAction implements Action {
+  readonly type: string = LOGIN_FAIL; // this is identified in the reducer
+
+  constructor(public data: string) { }
+}
+
 
 export type AuthActions = LoginAction
-  | LogoutAction;
+  | LogoutAction | LoginStartAction | LoginFailAction;

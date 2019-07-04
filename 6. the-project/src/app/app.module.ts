@@ -12,6 +12,8 @@ import { CoreModule } from './core.module';
 import { AuthModule } from './auth/auth.module';
 import { StoreModule } from '@ngrx/store';
 import * as fromApp from './store/app.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { AuthEffects } from './auth/store/auth.effects';
 
 // remove stuff from 'imports', but also remove import at the top because otherwise it does not reduce code size
 
@@ -25,6 +27,7 @@ import * as fromApp from './store/app.reducer';
     AppRoutingModule,
     HttpClientModule,
     StoreModule.forRoot(fromApp.appReducer),
+    EffectsModule.forRoot([AuthEffects]),
     AuthModule,
     ShoppingListModule,
     SharedThingsModule,
