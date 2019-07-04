@@ -3,6 +3,7 @@ import { Recipe } from "../recipe.model";
 
 export const SET_RECIPES = "[AUTH]SET_RECIPES";
 export const FETCH_RECIPES = "[AUTH]FETCH_RECIPES";
+export const STORE_RECIPES = "[AUTH]STORE_RECIPES";
 export const ADD_RECIPE = "[AUTH]ADD_RECIPE";
 export const UPDATE_RECIPE = "[AUTH]UPDATE_RECIPE";
 export const DELETE_RECIPE = "[AUTH]DELETE_RECIPE";
@@ -17,6 +18,13 @@ export class SetRecipesAction implements Action {
 
 export class FetchRecipesAction implements Action {
   readonly type: string = FETCH_RECIPES; // this is identified in the reducer
+
+  constructor(public data: void) { }
+}
+
+
+export class StoreRecipesAction implements Action {
+  readonly type: string = STORE_RECIPES; // this is identified in the reducer
 
   constructor(public data: void) { }
 }
@@ -44,5 +52,5 @@ export class DeleteRecipeAction implements Action {
 
 
 
-export type RecipeActions = SetRecipesAction | FetchRecipesAction |
+export type RecipeActions = SetRecipesAction | FetchRecipesAction | StoreRecipesAction |
   AddRecipeAction | DeleteRecipeAction | UpdateRecipeAction;
