@@ -1,12 +1,7 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { Observable } from "rxjs/Observable";
-import { catchError, tap } from "rxjs/operators";
-import { ErrorObservable } from "rxjs/observable/ErrorObservable";
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { HttpClient } from "@angular/common/http";
 import { User } from "./user.model";
 import { Router } from "@angular/router";
-import { environment } from "../../environments/environment";
 import { Store } from "@ngrx/store";
 import * as fromApp from "../store/app.reducer";
 import * as authActions from "./store/auth.actions";
@@ -33,26 +28,6 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router,
     private store: Store<fromApp.AppStateModel>) {
 
-  }
-
-  signup(email: string, pass: string): Observable<AuthResponseData> {
-    let url = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=' + environment.firebaseAPIKey;
-    return this.http.post<AuthResponseData>(url, {
-      email: email,
-      password: pass,
-      returnSecureToken: true
-    }).pipe(catchError(this.handleError));
-  }
-
-  login(email: string, pass: string): Observable<AuthLoginResponseData> {
-    let url = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=' + environment.firebaseAPIKey;
-    return this.http.post<AuthLoginResponseData>(url, {
-      email: email,
-      password: pass,
-      returnSecureToken: true
-    }).pipe(
-      catchError(this.handleError),
-      tap(this.handleAuth.bind(this)));
   }
 
   autoLogin() {
@@ -87,33 +62,5 @@ export class AuthService {
 
   autoLogout(expirationDuration: number) {
     this.toeTimer = setTimeout(this.logout.bind(this), expirationDuration);
-  }
-
-  private handleAuth(data: AuthLoginResponseData) {
-    const expDate = new Date(new Date().getTime() + +data.expiresIn * 1000);
-    const user = new User(data.email, data.localId, data.idToken, expDate);
-    // console.log(user);
-    localStorage.setItem('userData', JSON.stringify(user));
-    this.autoLogout(+data.expiresIn * 1000);
-    this.store.dispatch(new authActions.LoginAction(user));
-  }
-
-  private handleError(error: HttpErrorResponse): ErrorObservable {
-    let errorMsg = '';
-    switch(error && error.error && error.error.error && error.error.error.message) {
-      case 'EMAIL_EXISTS':
-          errorMsg = 'E-mail already registered!';
-        break;
-      case 'EMAIL_NOT_FOUND':
-          errorMsg = 'No users with this e-mail!';
-        break;
-      case 'INVALID_PASSWORD':
-          errorMsg = 'Incorrect password!';
-        break;
-      default:
-          errorMsg = 'Unknown error: ' + error.message;
-        break;
-    }
-    return ErrorObservable.create(new Error(errorMsg));
   }
 }

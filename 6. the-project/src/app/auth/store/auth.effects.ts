@@ -62,8 +62,8 @@ export class AuthEffects {
 
   // efect that only does something and does not map to another action
   @Effect({ dispatch: false })
-  authSuccess = this.actions$.pipe(
-    ofType(authActions.LOGIN),
+  authRedirect = this.actions$.pipe(
+    ofType(authActions.LOGIN, authActions.LOGOUT),
     tap(() => {
       this.router.navigate(["/"]);
     })
