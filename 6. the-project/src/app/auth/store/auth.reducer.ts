@@ -37,6 +37,7 @@ export function authReducer(state = initialState, action: authActions.AuthAction
       };
 
     case authActions.LOGIN_START:
+    case authActions.SIGNUP_START:
       return {
         ...state,
         authError: null,

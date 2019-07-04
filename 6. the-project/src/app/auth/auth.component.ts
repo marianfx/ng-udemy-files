@@ -19,17 +19,16 @@ export class AuthComponent implements OnInit, OnDestroy {
   isLoginMode = false;
   isLoading = false;
   error = '';
+  authSubscription: Subscription;
 
   closeSub: Subscription;
   @ViewChild(PlaceholderDirective) alertHost: PlaceholderDirective; // gets the first found
 
-  constructor(private auth: AuthService,
-    private router: Router,
-    private resolver: ComponentFactoryResolver,
+  constructor(private resolver: ComponentFactoryResolver,
     private store: Store<fromApp.AppStateModel>) {}
 
   ngOnInit() {
-    this.store.select("auth").subscribe(authState => {
+    this.authSubscription = this.store.select("auth").subscribe(authState => {
       this.isLoading = authState.loading;
       this.error = authState.authError;
       if (this.error) {
@@ -44,7 +43,6 @@ export class AuthComponent implements OnInit, OnDestroy {
 
   onSubmit(f: NgForm) {
     let payload = f.value; // has already correctly named fields {email, pass}
-    let authObservable: Observable<AuthResponseData>;
     if (this.isLoginMode) {
       // authObservable = this.auth.login(payload["email"], payload["password"]);
       this.store.dispatch(new authActions.LoginStartAction({
@@ -52,7 +50,11 @@ export class AuthComponent implements OnInit, OnDestroy {
         password: payload["password"]
       }));
     } else {
-      authObservable = this.auth.signup(payload["email"], payload["password"]);
+      // authObservable = this.auth.signup(payload["email"], payload["password"]);
+      this.store.dispatch(new authActions.SignupStartAction({
+        email: payload["email"],
+        password: payload["password"]
+      }));
     }
 
     f.reset();
@@ -77,6 +79,9 @@ export class AuthComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.closeSub) {
       this.closeSub.unsubscribe();
+    }
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
     }
   }
 }

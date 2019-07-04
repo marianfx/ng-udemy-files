@@ -2,12 +2,38 @@ import { Actions, ofType, Effect } from "@ngrx/effects";
 import * as authActions from "./auth.actions";
 import { switchMap, catchError, map, tap } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
-import { AuthLoginResponseData } from "../auth.service";
+import { AuthLoginResponseData, AuthResponseData } from "../auth.service";
 import { environment } from "../../../environments/environment";
 import { of } from "rxjs/observable/of";
 import { User } from "../user.model";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
+
+const handleAuthentication = (data) => {
+  // from handleAuth
+  const expDate = new Date(new Date().getTime() + +data.expiresIn * 1000);
+  const user = new User(data.email, data.localId, data.idToken, expDate);
+  return new authActions.LoginAction(user);
+};
+
+const handleError = (error) => {
+  let errorMsg = "Unknown error happened";
+  switch(error && error.error && error.error.error && error.error.error.message) {
+    case "EMAIL_EXISTS":
+        errorMsg = "E-mail already registered!";
+      break;
+    case "EMAIL_NOT_FOUND":
+        errorMsg = "No users with this e-mail!";
+      break;
+    case "INVALID_PASSWORD":
+        errorMsg = "Incorrect password!";
+      break;
+    default:
+        errorMsg = "Unknown error: " + error.message;
+      break;
+  }
+  return of(new authActions.LoginFailAction(errorMsg)); // crucial to be non-error observable to not stop the outer
+};
 
 @Injectable()
 export class AuthEffects {
@@ -25,30 +51,8 @@ export class AuthEffects {
         password: authData.data.password,
         returnSecureToken: true
       }).pipe(
-          map(data => {
-            // from handleAuth
-            const expDate = new Date(new Date().getTime() + +data.expiresIn * 1000);
-            const user = new User(data.email, data.localId, data.idToken, expDate);
-            return new authActions.LoginAction(user);
-          }),
-          catchError(error => {
-            let errorMsg = 'Unknown error happened';
-            switch(error && error.error && error.error.error && error.error.error.message) {
-              case 'EMAIL_EXISTS':
-                  errorMsg = 'E-mail already registered!';
-                break;
-              case 'EMAIL_NOT_FOUND':
-                  errorMsg = 'No users with this e-mail!';
-                break;
-              case 'INVALID_PASSWORD':
-                  errorMsg = 'Incorrect password!';
-                break;
-              default:
-                  errorMsg = 'Unknown error: ' + error.message;
-                break;
-            }
-            return of(new authActions.LoginFailAction(errorMsg)); // crucial to be non-error observable to not stop the outer
-          })
+          map(handleAuthentication),
+          catchError(handleError)
         );
     }),
     // if we would catch error, the ongoing observable would die (must not)
@@ -62,6 +66,24 @@ export class AuthEffects {
     ofType(authActions.LOGIN),
     tap(() => {
       this.router.navigate(["/"]);
+    })
+  );
+
+
+  // efect that triggers a new action (auth)
+  @Effect()
+  authLogout = this.actions$.pipe(
+    ofType(authActions.SIGNUP_START),
+    switchMap((signupData: authActions.SignupStartAction) => {
+      let url = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=' + environment.firebaseAPIKey;
+      return this.http.post<AuthResponseData>(url, {
+        email: signupData.data.email,
+        password: signupData.data.password,
+        returnSecureToken: true
+      }).pipe(
+        map(handleAuthentication),
+        catchError(handleError)
+      );;
     })
   );
 
