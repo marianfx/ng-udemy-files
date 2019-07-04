@@ -1,8 +1,7 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import * as fromApp from "../store/app.reducer";
+import * as authActions from "./store/auth.actions";
 
 export interface AuthResponseData {
   kind: string;
@@ -23,12 +22,20 @@ export class AuthService {
   toeTimer: any;
 
 
-  constructor(private http: HttpClient, private router: Router,
-    private store: Store<fromApp.AppStateModel>) {
+  constructor(private store: Store<fromApp.AppStateModel>) {
 
   }
 
-  autoLogout(expirationDuration: number) {
-    // this.toeTimer = setTimeout(this.logout.bind(this), expirationDuration);
+  setLogoutTimer(expirationDuration: number) {
+    this.toeTimer = setTimeout(() => {
+      this.store.dispatch(new authActions.LogoutAction(null));
+    }, expirationDuration);
+  }
+
+  clearLogoutTimer() {
+    if (this.toeTimer) {
+      clearInterval(this.toeTimer);
+      this.toeTimer = null;
+    }
   }
 }

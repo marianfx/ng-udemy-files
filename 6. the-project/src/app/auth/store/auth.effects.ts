@@ -2,7 +2,7 @@ import { Actions, ofType, Effect } from "@ngrx/effects";
 import * as authActions from "./auth.actions";
 import { switchMap, catchError, map, tap } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
-import { AuthLoginResponseData, AuthResponseData } from "../auth.service";
+import { AuthLoginResponseData, AuthResponseData, AuthService } from "../auth.service";
 import { environment } from "../../../environments/environment";
 import { of } from "rxjs/observable/of";
 import { User } from "../user.model";
@@ -36,6 +36,11 @@ const handleError = (error) => {
   return of(new authActions.LoginFailAction(errorMsg)); // crucial to be non-error observable to not stop the outer
 };
 
+const setAutoLogout = (authService: AuthService, data) => {
+  console.log(data.expiresIn);
+  authService.setLogoutTimer(+data.expiresIn * 1000);
+};
+
 @Injectable()
 export class AuthEffects {
 
@@ -52,6 +57,7 @@ export class AuthEffects {
         password: authData.data.password,
         returnSecureToken: true
       }).pipe(
+          tap(setAutoLogout.bind(null, this.authService)),
           map(handleAuthentication),
           catchError(handleError)
         );
@@ -82,6 +88,7 @@ export class AuthEffects {
         password: signupData.data.password,
         returnSecureToken: true
       }).pipe(
+        tap(setAutoLogout.bind(null, this.authService)),
         map(handleAuthentication),
         catchError(handleError)
       );
@@ -105,9 +112,9 @@ export class AuthEffects {
       };
       let user = new User(udataJson.email, udataJson.id, udataJson._token, new Date(udataJson._tokenExpirationDate));
       if (user.token) {
+        const expDuration = new Date(udataJson._tokenExpirationDate).getTime() - new Date().getTime();
+        setAutoLogout(this.authService, { expiresIn: expDuration });
         return new authActions.LoginAction(user);
-        // const durationExpire = new Date(udataJson._tokenExpirationDate).getTime() - new Date().getTime();
-        // this.autoLogout(durationExpire * 1000);
       }
       // return an empty action
       return { type: "dummy" };
@@ -118,6 +125,7 @@ export class AuthEffects {
   authLogout = this.actions$.pipe(
     ofType(authActions.LOGOUT),
     tap(() => {
+      this.authService.clearLogoutTimer();
       localStorage.removeItem("userData");
     })
   );
@@ -126,7 +134,8 @@ export class AuthEffects {
   // name convention with the dollar (it's an observable)
   constructor(private actions$: Actions,
     private http: HttpClient,
-    private router: Router) {
+    private router: Router,
+    private authService: AuthService) {
 
   }
 }
