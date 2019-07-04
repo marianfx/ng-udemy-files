@@ -13,6 +13,7 @@ const handleAuthentication = (data) => {
   // from handleAuth
   const expDate = new Date(new Date().getTime() + +data.expiresIn * 1000);
   const user = new User(data.email, data.localId, data.idToken, expDate);
+  localStorage.setItem("userData", JSON.stringify(user));
   return new authActions.LoginAction(user);
 };
 
@@ -72,10 +73,10 @@ export class AuthEffects {
 
   // efect that triggers a new action (auth)
   @Effect()
-  authLogout = this.actions$.pipe(
+  authSignup = this.actions$.pipe(
     ofType(authActions.SIGNUP_START),
     switchMap((signupData: authActions.SignupStartAction) => {
-      let url = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=' + environment.firebaseAPIKey;
+      let url = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=" + environment.firebaseAPIKey;
       return this.http.post<AuthResponseData>(url, {
         email: signupData.data.email,
         password: signupData.data.password,
@@ -83,7 +84,41 @@ export class AuthEffects {
       }).pipe(
         map(handleAuthentication),
         catchError(handleError)
-      );;
+      );
+    })
+  );
+
+  @Effect()
+  autoLogin = this.actions$.pipe(
+    ofType(authActions.AUTOLOGIN),
+    map(() => {
+      const userData = localStorage.getItem("userData");
+      if (!userData) {
+        return { type: "dummy" };
+      }
+
+      let udataJson = JSON.parse(userData) as {
+        email: string,
+        id: string,
+        _token: string,
+        _tokenExpirationDate: string
+      };
+      let user = new User(udataJson.email, udataJson.id, udataJson._token, new Date(udataJson._tokenExpirationDate));
+      if (user.token) {
+        return new authActions.LoginAction(user);
+        // const durationExpire = new Date(udataJson._tokenExpirationDate).getTime() - new Date().getTime();
+        // this.autoLogout(durationExpire * 1000);
+      }
+      // return an empty action
+      return { type: "dummy" };
+    })
+  );
+
+  @Effect({ dispatch: false })
+  authLogout = this.actions$.pipe(
+    ofType(authActions.LOGOUT),
+    tap(() => {
+      localStorage.removeItem("userData");
     })
   );
 
