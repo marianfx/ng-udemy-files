@@ -32,8 +32,22 @@ export class AuthEffects {
             return new authActions.LoginAction(user);
           }),
           catchError(error => {
-            // ...
-            return of(); // crucial to be non-error observable to not stop the outer
+            let errorMsg = 'Unknown error happened';
+            switch(error && error.error && error.error.error && error.error.error.message) {
+              case 'EMAIL_EXISTS':
+                  errorMsg = 'E-mail already registered!';
+                break;
+              case 'EMAIL_NOT_FOUND':
+                  errorMsg = 'No users with this e-mail!';
+                break;
+              case 'INVALID_PASSWORD':
+                  errorMsg = 'Incorrect password!';
+                break;
+              default:
+                  errorMsg = 'Unknown error: ' + error.message;
+                break;
+            }
+            return of(new authActions.LoginFailAction(errorMsg)); // crucial to be non-error observable to not stop the outer
           })
         );
     }),
