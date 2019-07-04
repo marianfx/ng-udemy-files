@@ -1,8 +1,5 @@
 import { Component, ComponentFactoryResolver, ViewChild, OnDestroy, OnInit } from "@angular/core";
 import { NgForm } from "@angular/forms";
-import { AuthService, AuthResponseData } from "./auth.service";
-import { Observable } from "rxjs/Observable";
-import { Router } from "@angular/router";
 import { AlertComponent } from "../shared/alert/alert.component";
 import { PlaceholderDirective } from "../shared/placeholder.directive";
 import { Subscription } from "rxjs/Subscription";

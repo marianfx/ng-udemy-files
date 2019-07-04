@@ -70,7 +70,7 @@ export class AuthEffects {
   // efect that only does something and does not map to another action
   @Effect({ dispatch: false })
   authRedirect = this.actions$.pipe(
-    ofType(authActions.LOGIN, authActions.LOGOUT),
+    ofType(authActions.LOGIN),
     tap(() => {
       this.router.navigate(["/"]);
     })
@@ -125,6 +125,7 @@ export class AuthEffects {
   authLogout = this.actions$.pipe(
     ofType(authActions.LOGOUT),
     tap(() => {
+      this.router.navigate(["/"]);
       this.authService.clearLogoutTimer();
       localStorage.removeItem("userData");
     })
