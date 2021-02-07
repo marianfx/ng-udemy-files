@@ -3,7 +3,7 @@ import { UsersService } from './services/users.service';
 import { CounterService } from './services/counter.service';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-assignment-5',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })

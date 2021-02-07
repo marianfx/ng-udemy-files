@@ -1,4 +1,3 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
@@ -16,8 +15,9 @@ import { StoreModule } from '@ngrx/store';
 import * as fromApp from './store/app.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './auth/store/auth.effects';
-import { environment } from '../environments/environment.prod';
+import { environment } from '../../environments/environment.prod';
 import { RecipeEffects } from './recipes/store/recipe.effects';
+import { CommonModule } from '@angular/common';
 
 // remove stuff from 'imports', but also remove import at the top because otherwise it does not reduce code size
 
@@ -27,7 +27,7 @@ import { RecipeEffects } from './recipes/store/recipe.effects';
     HeaderComponent
   ],
   imports: [
-    BrowserModule,
+    CommonModule,
     AppRoutingModule,
     HttpClientModule,
     StoreModule.forRoot(fromApp.appReducer),
@@ -38,6 +38,9 @@ import { RecipeEffects } from './recipes/store/recipe.effects';
     ShoppingListModule,
     SharedThingsModule,
     CoreModule
+  ],
+  exports: [
+    AppComponent
   ],
   bootstrap: [AppComponent]
 })

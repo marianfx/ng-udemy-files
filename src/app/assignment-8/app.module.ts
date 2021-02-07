@@ -17,6 +17,9 @@ import { SortPipe } from './sort.pipe';
     BrowserModule,
     FormsModule,
   ],
+  exports: [
+    AppComponent
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

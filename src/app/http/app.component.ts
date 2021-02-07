@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Post } from './post.model';
 import { PostsService } from './posts.service';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-http',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })

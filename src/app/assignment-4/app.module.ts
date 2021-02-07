@@ -19,6 +19,9 @@ import { EvenComponent } from './controls/even/even.component';
     BrowserModule,
     FormsModule,
   ],
+  exports: [
+    AppComponent
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

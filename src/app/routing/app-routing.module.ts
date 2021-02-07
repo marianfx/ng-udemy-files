@@ -19,6 +19,10 @@ const appRoutes: Routes = [
     component: HomeComponent
   },
   {
+    path: "the-project",
+    loadChildren: () => import ('../the-project/app.module').then(m => m.AppModule)
+  },
+  {
     path: "users",
     component: UsersComponent,
     children: [

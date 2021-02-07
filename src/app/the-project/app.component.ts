@@ -4,7 +4,7 @@ import * as authActions from "./auth/store/auth.actions";
 import { Store } from '@ngrx/store';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-the-project',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })

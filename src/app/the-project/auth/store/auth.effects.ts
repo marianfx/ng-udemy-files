@@ -3,7 +3,7 @@ import * as authActions from "./auth.actions";
 import { switchMap, catchError, map, tap } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
 import { AuthLoginResponseData, AuthResponseData, AuthService } from "../auth.service";
-import { environment } from "../../../environments/environment";
+import { environment } from "../../../../environments/environment";
 import { of } from "rxjs/observable/of";
 import { User, UserExtra } from "../user.model";
 import { Injectable } from "@angular/core";

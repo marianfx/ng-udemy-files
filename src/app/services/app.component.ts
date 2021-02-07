@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AccountsService } from './accounts.service';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-services',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })

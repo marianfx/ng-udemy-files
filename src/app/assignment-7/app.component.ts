@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-assignment-7',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })

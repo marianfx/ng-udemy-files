@@ -17,6 +17,9 @@ import { ServerElementComponent } from './server-element/server-element.componen
     BrowserModule,
     FormsModule,
   ],
+  exports: [
+    AppComponent
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

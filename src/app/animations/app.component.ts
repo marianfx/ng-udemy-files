@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { trigger, state, style, transition, animate, keyframes, group } from '@angular/animations';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-animations',
   templateUrl: './app.component.html',
   animations: [
     trigger('divState', [

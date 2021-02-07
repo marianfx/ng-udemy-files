@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-forms-template-driven',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })

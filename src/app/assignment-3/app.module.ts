@@ -14,6 +14,9 @@ import { InputDetailsComponent } from './input-details/input-details.component';
   imports: [
     BrowserModule
   ],
+  exports: [
+    AppComponent
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

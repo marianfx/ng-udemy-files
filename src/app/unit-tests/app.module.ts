@@ -15,6 +15,9 @@ import { UserService } from './user/user.service';
   imports: [
     BrowserModule
   ],
+  exports: [
+    AppComponent
+  ],
   providers: [UserService],
   bootstrap: [AppComponent]
 })

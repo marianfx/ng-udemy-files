@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { Subject, Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-observables',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })

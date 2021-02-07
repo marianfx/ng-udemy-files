@@ -32,7 +32,8 @@ export class ServerElementComponent implements OnInit, OnChanges, DoCheck, After
    */
   ngOnInit() {
     console.log("I'm initializing my data");
-    console.log("Text content: " + this.headingElement.nativeElement.textContent); // no value or error (if not using static: true)
+    if (this.headingElement && this.headingElement.nativeElement)
+      console.log("Text content: " + this.headingElement.nativeElement.textContent); // no value or error (if not using static: true)
   }
 
   /**

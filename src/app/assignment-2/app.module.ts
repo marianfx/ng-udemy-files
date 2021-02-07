@@ -16,6 +16,9 @@ import { AppUsersComponent } from './app-users/app-users.component';
     BrowserModule,
     FormsModule
   ],
+  exports: [
+    AppComponent
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

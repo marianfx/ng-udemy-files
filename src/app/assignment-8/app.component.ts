@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-assignment-8',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
